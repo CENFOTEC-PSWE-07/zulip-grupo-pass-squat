@@ -1,0 +1,15 @@
+flowchart TB
+    correo["Servicio externo de correo<br/>Buzón SMTP e IMAP"]
+
+    subgraph zulip["Sistema Zulip"]
+        web["Aplicación web<br/>TypeScript<br/>Configuración y confirmación de revocación"]
+        api["Servidor de aplicación<br/>Python y Django<br/>Autorización y administración"]
+        receptor["Proceso email_mirror<br/>Python y Django<br/>Recuperación y procesamiento"]
+        db[("PostgreSQL<br/>Políticas, direcciones y mensajes")]
+
+        web -->|"Configura · HTTPS y JSON"| api
+        api -->|"Consulta y modifica · SQL"| db
+        receptor -->|"Valida y guarda · SQL"| db
+    end
+
+    receptor -->|"Consulta buzón · IMAPS"| correo
