@@ -1,0 +1,22 @@
+flowchart TB
+    correo["Buzón dedicado<br/>Sistema externo"]
+    api["API administrativa<br/>Django<br/>Autoriza cambios y revocación"]
+    db[("PostgreSQL<br/>Estado vigente y bloqueos")]
+
+    subgraph receptor["Contenedor email_mirror"]
+        analisis["Recuperación y análisis<br/>Extrae destinatario y contenido"]
+        admision["Control de admisión propuesto<br/>Comprueba políticas y dirección"]
+        decision{"¿Correo permitido?"}
+        publicacion["Publicación<br/>Guarda dentro de la transacción"]
+        rechazo["Rechazo definitivo<br/>No publica ni reintenta al reactivar"]
+
+        analisis -->|"Invoca · Python"| admision
+        admision --> decision
+        decision -->|"Sí"| publicacion
+        decision -->|"No"| rechazo
+    end
+
+    analisis -->|"Recupera · IMAPS"| correo
+    admision -->|"Bloquea y consulta · SQL"| db
+    publicacion -->|"Inserta y confirma · SQL"| db
+    api -->|"Coordina cambios y revocación · SQL"| db

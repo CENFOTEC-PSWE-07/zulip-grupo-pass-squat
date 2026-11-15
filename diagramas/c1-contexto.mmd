@@ -1,0 +1,14 @@
+flowchart TB
+    admin["Administrador de organización"]
+    gestor["Gestor autorizado del canal"]
+    miembro["Miembro del canal"]
+    remitente["Remitente de correo"]
+
+    zulip["Zulip<br/>Políticas, direcciones y publicación"]
+    correo["Servicio externo de correo<br/>SMTP e IMAP"]
+
+    admin -->|"Configura política global · HTTPS"| zulip
+    gestor -->|"Configura canal y revoca direcciones · HTTPS"| zulip
+    miembro -->|"Consulta mensajes según permisos · HTTPS"| zulip
+    remitente -->|"Envía correo · SMTP"| correo
+    zulip -->|"Recupera mensajes · IMAPS"| correo
