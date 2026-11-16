@@ -72,7 +72,12 @@ if os.getenv("BEHIND_HTTPS_PROXY"):
     # Trust requests from this host (required due to Nginx proxy)
     CSRF_TRUSTED_ORIGINS = [EXTERNAL_URI_SCHEME + EXTERNAL_HOST]
 
-EMAIL_GATEWAY_PATTERN = "%s@" + EXTERNAL_HOST_WITHOUT_PORT
+EMAIL_GATEWAY_PATTERN = os.environ.get("EMAIL_GATEWAY_PATTERN", "%s@" + EXTERNAL_HOST_WITHOUT_PORT)
+EMAIL_GATEWAY_IMAP_SERVER = os.environ.get("EMAIL_GATEWAY_IMAP_SERVER", "imap.gmail.com")
+EMAIL_GATEWAY_IMAP_PORT = int(os.environ.get("EMAIL_GATEWAY_IMAP_PORT", 993))
+EMAIL_GATEWAY_IMAP_USERNAME = os.environ.get("EMAIL_GATEWAY_IMAP_USERNAME")
+EMAIL_GATEWAY_IMAP_PASSWORD = os.environ.get("EMAIL_GATEWAY_IMAP_PASSWORD")
+EMAIL_GATEWAY_IMAP_FOLDER = os.environ.get("EMAIL_GATEWAY_IMAP_FOLDER", "INBOX")
 NOTIFICATION_BOT = "notification-bot@zulip.com"
 EMAIL_GATEWAY_BOT = "emailgateway@zulip.com"
 PHYSICAL_ADDRESS = "Zulip Headquarters, 123 Octo Stream, South Pacific Ocean"
