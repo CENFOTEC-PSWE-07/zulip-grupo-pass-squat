@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-restart-server
+exec "$(dirname "$0")/restart-server" "$@"
