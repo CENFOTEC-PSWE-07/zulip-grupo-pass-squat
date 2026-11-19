@@ -108,9 +108,16 @@ class zulip::profile::postgresql(Boolean $start = true) {
   } else {
     $require = [Package[$zulip::postgresql_base::postgresql]]
   }
+  file { '/var/log/postgresql':
+    ensure  => directory,
+    owner   => 'postgres',
+    group   => 'postgres',
+    mode    => '0750',
+    require => Package[$zulip::postgresql_base::postgresql],
+  }
   service { 'postgresql':
     ensure    => $start,
-    require   => $require + [Exec['reload systemd']],
+    require   => $require + [Exec['reload systemd'], File['/var/log/postgresql']],
     subscribe => [ File[$postgresql_conf_file] ],
   }
 }
